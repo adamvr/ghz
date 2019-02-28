@@ -51,6 +51,9 @@ TMP_BIN = $(TMP)/bin
 # TMP_COVERAGE is where we store code coverage files.
 TMP_COVERAGE := $(TMP_BASE)/coverage
 
+# BIN is where we build our binaries
+BIN := $(CURDIR)/bin
+
 # The following unexports and exports put us into Golang Modules mode.
 
 # Make sure GOPATH is unset so that it is not possible to interfere with other packages.
@@ -72,7 +75,19 @@ GO_MODULE := $(shell grep '^module ' go.mod | cut -f 2 -d ' ')
 
 # All runs the default lint, test, and code coverage targets.
 .PHONY: all
-all: lint cover
+all: bin lint cover
+
+$(BIN):
+	mkdir -p $(BIN)
+
+.PHONY: bin
+bin: cli web
+
+cli: $(BIN)
+	go build -o $(BIN)/ghz cmd/ghz/main.go cmd/ghz/config.go
+
+web: $(BIN)
+	go build -o $(BIN)/ghz cmd/ghz-web/main.go
 
 # Clean removes all temporary files.
 .PHONY: clean

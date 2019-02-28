@@ -19,6 +19,7 @@
 /cmd/ghz-web/ghz-web
 /cmd/server/server
 /.tmp/
+/bin
 
 dist
 build
